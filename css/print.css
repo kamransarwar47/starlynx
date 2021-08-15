@@ -1,0 +1,90 @@
+/* CSS Document */
+
+BODY {
+    margin: 0;
+    padding: 0;
+    margin-left: 50px;
+    font-size: 12px;
+    color: #000000;
+    font-family: Arial;
+}
+
+/* Record Lists */
+#reclist td {
+    border-bottom: 1px solid #ccc;
+}
+
+#reclist #listhead td {
+    font-weight: bold;
+    border-bottom: 2px solid #999;
+    border-top: 2px solid #999;
+}
+
+/* Invoice */
+#invoice {
+    /*height: 400px;*/
+}
+
+#office_name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#office_address {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+#office_contact {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.stamp {
+    /*background-image: url(../images/stamp-duplicate.png);
+    background-position: center center;
+    background-repeat: no-repeat;*/
+
+    width: auto;
+    height: auto;
+    margin: 0px auto;
+    position: absolute;
+    left: 30%;
+    top: inherit;
+    margin-top: 50px;
+
+
+    /*display: list-item;
+  list-style-image: url(../images/stamp-duplicate.png);
+  list-style-position: inside;
+    z-index: -99;*/
+}
+
+/* Details */
+#tblDetails strong {
+    font-size: 12px;
+}
+
+#tblDetails {
+    border: 1px solid #000000;
+}
+
+
+
+#tblDetails p {
+    margin: 0px;
+    padding: 0px;
+}
+
+.box_title {
+    margin: 0;
+    margin-top: 5px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.notes {
+    color: #000;
+    font-size: 11px;
+}

@@ -1,0 +1,3 @@
+mysqldump --add-drop-table --extended-insert --databases stardev --result-file=stardev_23jun2014.sql -u root -p
+
+mysqldump --add-drop-table --extended-insert --databases stardev --tables transactions --result-file=transactions_23jun2014.sql -u root -p

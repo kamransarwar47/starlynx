@@ -1,0 +1,456 @@
+/* CSS Document */
+
+BODY {
+    margin: 0;
+    padding: 0;
+}
+
+A, A:visited {
+    color: #06F;
+    text-decoration: none;
+}
+
+A:hover {
+    text-decoration: underline;
+}
+
+#wrapper {
+    float: left;
+    width: 100%;
+    background-color: #FFF;
+    margin: 0px;
+    padding: 0px;
+}
+
+#wrapper-dashboard {
+    float: left;
+    width: 100%;
+    background-color: #f3f4fa;
+    margin: 0px;
+    padding: 0px;
+}
+
+#nav-header {
+    float: left;
+    width: 100%;
+    height: 152px;
+    background-image: url(../images/bg_header.png);
+    background-repeat: repeat-x;
+    background-color: #FFF;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    box-shadow: 0px 2px 10px #CCC;
+    z-index: 9999;
+}
+
+#header_area {
+    float: left;
+    width: 100%;
+    height: 152px;
+    background-image: url(../images/bg_head_new.png);
+    background-repeat: no-repeat;
+}
+
+#header_search_box {
+    position: absolute;
+    top: 10px;
+    height: 43px;
+    left: -170px;
+}
+
+#header_search_box a {
+    font-size: 14px;
+    color: #1D64A3;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 2px solid #1D64A3;
+    padding: 5px 10px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.searchBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    left: -370px;
+    top: -3px;
+}
+
+#searchQueryInput {
+    width: 100px;
+    height: 26px;
+    background: #f5f5f5;
+    outline: none;
+    border: 2px solid #1D64A3;
+    border-radius: 1.625rem;
+    padding: 0 3.5rem 0 1.5rem;
+    font-size: 14px;
+}
+
+#searchQuerySubmit {
+    width: 3.5rem;
+    height: 2.8rem;
+    margin-left: -3.5rem;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+#searchQuerySubmit:hover {
+    cursor: pointer;
+}
+
+a.ui-button {
+    padding: .4em 1em;
+}
+
+a.ui-button, a.ui-button:hover {
+    color: #0070a3;
+}
+
+#user_section {
+    float: right;
+    text-align: right;
+    width: 350px;
+    height: 43px;
+    margin-top: 43px;
+    margin-right: 20px;
+}
+
+#user_section #user_menu {
+    font-family: Arial;
+    font-size: 11px;
+    color: #999;
+    line-height: 18px;
+}
+
+#user_section #user_menu A {
+    color: #999;
+    text-decoration: none;
+}
+
+#user_section #user_menu A:hover {
+    color: #666;
+}
+
+#notifications {
+    float: right;
+    text-align: left;
+    width: 325px;
+    height: 43px;
+    margin-top: 43px;
+    margin-right: 20px;
+}
+
+#notifications #notify_menu {
+    font-family: Arial;
+    font-size: 11px;
+    color: #999;
+    line-height: 18px;
+}
+
+#notifications #notify_menu A {
+    color: #999;
+    text-decoration: none;
+}
+
+#notifications #notify_menu A:hover {
+    color: #666;
+}
+
+#starlynx {
+    float: right;
+    width: 134px;
+    height: 43px;
+    margin-top: 40px;
+    margin-right: 10px;
+}
+
+#workspace {
+    float: left;
+    width: 95%;
+    min-height: 700px;
+    margin-top: 170px;
+    margin-bottom: 20px;
+    padding-left: 40px;
+    padding-right: 20px;
+    font-family: Arial;
+    font-size: 12px;
+    color: #666;
+}
+
+#workspace-dashboard {
+    min-height: 700px;
+    margin-top: 190px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 12px;
+    color: #666;
+}
+
+#footer {
+    float: left;
+    width: 100%;
+    height: 18px;
+    background-color: #202857;
+}
+
+#footer_area {
+    /*float: left;*/
+    width: 980px;
+    height: 18px;
+    margin: 0px auto;
+    color: #FFF;
+    background-image:url(../images/bg_foot.png);
+    background-repeat: no-repeat;
+    font-family: Arial;
+    font-size: 11px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.notes {
+    color: #999;
+    font-size: 11px;
+}
+
+/* Box */
+.top_left {
+    width: 10px;
+    height: 44px;
+    background-image: url(images/top_left.png);
+    background-repeat: no-repeat;
+}
+
+.top_right {
+    width: 10px;
+    height: 44px;
+    background-image: url(images/top_right.png);
+    background-repeat: no-repeat;
+}
+
+.bottom_left {
+    width: 10px;
+    height: 11px;
+    background-image: url(images/bottom_left.png);
+    background-repeat: no-repeat;
+}
+
+.bottom_right {
+    width: 10px;
+    height: 11px;
+    background-image: url(images/bottom_right.png);
+    background-repeat: no-repeat;
+}
+
+.border_left {
+    width: 10px;
+    background-image: url(images/border_left.png);
+    background-repeat: repeat-y;
+}
+
+.border_right {
+    width: 10px;
+    background-image: url(images/border_right.png);
+    background-repeat: repeat-y;
+}
+
+.border_bottom {
+    height: 11px;
+    background-image: url(images/border_bottom.png);
+    background-repeat: repeat-x;
+}
+
+.bg_title {
+    height: 44px;
+    background-image: url(images/bg_title.png);
+    background-repeat: repeat-x;
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.box_title {
+    margin: 0;
+    margin-top: 10px;
+    padding: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Form Elements */
+INPUT[type="text"], INPUT[type="password"], TEXTAREA, SELECT {
+    background-image: url(images/bg_textbox.png);
+    background-repeat: repeat-x;
+    border: 1px solid #999;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 4px;
+}
+
+/* Add Users */
+#user_modules td {
+    border-bottom: 1px solid #CCC;
+    font-size: 11px;
+}
+
+/* Record Lists */
+#reclist td {
+    border-bottom: 1px solid #ccc;
+}
+
+#reclist tr:hover {
+    background-color: #fafafa;
+}
+
+#reclist #listhead td {
+    font-weight: bold;
+    background-color: #f6f6f6;
+    border-bottom: 2px solid #999;
+}
+
+/* Details */
+#tblDetails strong {
+    font-size: 12px;
+}
+
+#tblDetails td {
+    border: 1px solid #000000;
+}
+
+/* Messages */
+#messages {
+    float: left;
+    width: 100%;
+    max-height: 200px;
+    overflow: auto;
+}
+
+#msgView {
+    float: left;
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+    border-top: 2px solid #999999;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Notice Windows */
+#loginNotices {
+    width: auto;
+    height: auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ff9999;
+    border-radius: 3px;
+    background-color: #ffeeee;
+    display: none;
+    position: absolute;
+    left: 80%;
+    top: 90%;
+    filter: alpha(opacity=80);
+    opacity:.8;
+    font-size: 12px;
+    font-family: Arial;
+}
+
+#notices {
+    float: right;
+    width: auto;
+    height: auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #9999ff;
+    border-radius: 3px;
+    background-color: #eeeeff;
+    display: none;
+    position: fixed;
+    left: 80%;
+    top: 90%;
+    filter: alpha(opacity=80);
+    opacity:.8;
+    font-size: 12px;
+    font-family: Arial;
+}
+
+/* Kamran CSS */
+.btnLink {
+    padding: 0.1em 0.5em !important;
+}
+.helptooltip {
+     position: relative;
+     display: inline-block;
+     border-bottom: 1px dotted black;
+ }
+
+.helptooltip .helptooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: -10px;
+    left: 130%;
+}
+
+.helptooltip .helptooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+.helptooltip:hover .helptooltiptext {
+    visibility: visible;
+}
+
+input:read-only {
+    background: #f7f7f7;
+}
+
+.monthly_stats_chart_tooltip {
+    border-collapse: collapse;
+    background: #fafafa;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    color: #464a53;
+}
+
+.monthly_stats_chart_tooltip td {
+    border: 1px solid #f1f1f1;
+}
+
+.monthly_stats_chart_tooltip td, .monthly_stats_chart_tooltip th {
+    padding: 5px;
+}
+
+.monthly_stats_chart_tooltip th {
+    padding: 8px;
+    text-align: left;
+    background-color: #464a53;
+    color: white;
+}
+
+.monthly_stats_chart_tooltip .color_box {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
