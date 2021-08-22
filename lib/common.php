@@ -660,7 +660,7 @@
                 $pageData["title"] = strtoupper($pageData["title"]);
             }
 
-            $html .= "<option $style value='" . $pageData["id"] . "' $selected>" . $nodeIndent . " " . $pageData["title"] . "</option>";
+            $html .= "<option $style value='" . $pageData["id"] . "' $selected>" . $nodeIndent . " " . htmlspecialchars($pageData["title"]) . "</option>";
             $html .= $childrenOptionsHTL;
         }
 

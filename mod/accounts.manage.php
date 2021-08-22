@@ -227,7 +227,7 @@
                                 </p>
                                 <p>
                                     <strong>Title</strong><br/>
-                                    <input type="text" size="30" name="title" id="title" maxlength="100" value="<?= $title ?>"/>
+                                    <input type="text" size="30" name="title" id="title" maxlength="100" value="<?= htmlentities($title); ?>"/>
                                 </p>
                                 <p>
                                     <strong>Parent Account</strong><br/>

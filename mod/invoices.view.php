@@ -59,6 +59,7 @@
                 $sql = "update
                             transactions_details
                         set
+                            clearance_status = \"PENDING\",
                             deposit_slip_num = \"" . mysql_real_escape_string($deposit_slip_num) . "\",
                             deposit_date = \"" . mysql_real_escape_string($deposit_date) . "\",
                             deposit_in = \"" . mysql_real_escape_string(explode("|", $deposit_in)[0]) . "\",
@@ -77,13 +78,36 @@
             }
         }
         if ($cmd == "CLEARANCE") {
-            if (!empty($tid) && !empty($cnum) && !empty($st)) {
+            if (!empty($tid) && !empty($cnum) && !empty($clearance_status)) {
+                //
+                $sql = "SELECT 
+                            td.deposit_slip_num,
+                            td.deposit_date,
+                            da.account_number,
+                            td.deposit_acc_title,
+                            td.deposit_remarks,
+                            u.full_name AS cleared_by,
+                            td.clearance_log
+                        FROM transactions_details td JOIN deposit_accounts da ON td.deposit_in = da.id JOIN users u ON u.id = \"" . $userInfo["id"] . "\"
+                        WHERE td.cheque_number = \"" . mysql_real_escape_string($cnum) . "\" AND td.transaction_id = \"" . mysql_real_escape_string($tid) . "\"
+                        ORDER BY td.id LIMIT 1";
+                $result = mysql_query($sql, $conn) or die(mysql_error());
+                $result = mysql_fetch_assoc($result);
+                $transaction_log = ($result['clearance_log'] != '') ? unserialize($result['clearance_log']) : [];
+                unset($result['clearance_log']);
+                $cleared_on = date('Y-m-d H:i:s', time());
+                $result['cleared_on'] = $cleared_on;
+                $result['clearance_status'] = mysql_real_escape_string($clearance_status);
+                $transaction_log[] = $result;
+                $transaction_log = serialize($transaction_log);
+                //
                 $sql = "update
                             transactions_details
                         set
-                            clearance_status = \"" . mysql_real_escape_string($st) . "\",
-                            cleared_on = NOW(),
-                            cleared_by = \"" . $userInfo["id"] . "\"
+                            clearance_status = \"" . mysql_real_escape_string($clearance_status) . "\",
+                            cleared_on = \"" . $cleared_on . "\",
+                            cleared_by = \"" . $userInfo["id"] . "\",
+                            clearance_log = '" . $transaction_log . "'
                         where
                             cheque_number = \"" . mysql_real_escape_string($cnum) . "\"
                             and transaction_id = \"" . mysql_real_escape_string($tid) . "\"
@@ -218,18 +242,28 @@
         });
     });
 
-    function bankFormSubmit(tid, cnum) {
+    function bankFormSubmit(tid, cnum, dsn, ddte, din, dact, drem) {
+        dsn = dsn || '';
+        ddte = ddte || '';
+        din = din || '';
+        dact = dact || '';
+        drem = drem || '';
         if (tid != "") {
             $('#tid_brd').val(tid);
             $('#cnum_brd').val(cnum);
+            $('#deposit_slip_num').val(dsn);
+            $('#cheque_date').val(ddte);
+            $('#deposit_in').val(din + '|' + dact).change();
+            $('#deposit_remarks').val(drem);
 
             $("#dlgBankDeposit").dialog("open");
         }
     }
 
-    function updateClearance(st, tid, cnum) {
+    function updateClearance(thisObj) {
+        st = $(thisObj).val();
         if (st != "") {
-            document.location = "index.php?ss=<?=$ss?>&mod=<?=$mod?>&voucher_number=<?=$voucher_number?>&cmd=CLEARANCE&st=" + st + "&tid=" + tid + "&cnum=" + cnum;
+            $(thisObj).closest('form.frmClearance').submit();
         }
     }
 </script>
@@ -514,7 +548,7 @@
                                         $sql = "SELECT
                                     t.id, t.project_id, t.account_id, t.voucher_id, t.notes, t.invoice_date,
                                     d.id AS d_id, d.account_id as d_account, sum(d.amount) as amount, d.notes, d.bank_id, d.cheque_number, d.cheque_date, d.cheque_name, d.cheque_total_amount,
-                                    d.post_date, d.clearance_status, d.cleared_on, d.cleared_by, d.deposit_slip_num, d.deposit_date, d.deposit_remarks, d.deposit_in, d.deposit_acc_title
+                                    d.post_date, d.clearance_status, d.cleared_on, d.cleared_by, d.deposit_slip_num, d.deposit_date, d.deposit_remarks, d.deposit_in, d.deposit_acc_title, d.clearance_log
                                 FROM
                                     transactions t, transactions_details d
                                 WHERE
@@ -533,23 +567,23 @@
                                         if ($numrows > 0) {
                                             echo "<br /><strong style='font-size: 16px;'>Clearance Status</strong>";
                                             echo "<table border='0' width='100%' cellpadding='5' cellspacing='0' align='center' id='reclist'>";
-                                            echo "<tr id='listhead'>";
-                                            echo "<td width='5%'>Inv. Date</td>";
-                                            echo "<td width='10%'>Cheque # / Cash Serial</td>";
-                                            echo "<td width='5%'>Chq. Date</td>";
-                                            echo "<td width='10%'>Name on Cheque</td>";
-                                            echo "<td width='10%'>Total amount on Cheque</td>";
-                                            echo "<td width='5%'>Bank</td>";
-                                            echo "<td width='5%'>Amount</td>";
-                                            echo "<td width='10%'>Deposit Slip No.</td>";
-                                            echo "<td width='10%'>Deposit In</td>";
-                                            echo "<td width='10%'>Deposit Acc. Title</td>";
-                                            echo "<td width='5%'>Deposit Date</td>";
-                                            echo "<td width='10%'>Remarks</td>";
-                                            echo "<td width='5%' align='center'>Clearance</td>";
-                                            echo "</tr>";
                                             if ($numrows > 0) {
                                                 while ($rs = mysql_fetch_array($result)) {
+                                                    echo "<tr id='listhead'>";
+                                                    echo "<td width='5%'>Inv. Date</td>";
+                                                    echo "<td width='10%'>Cheque # / Cash Serial</td>";
+                                                    echo "<td width='5%'>Chq. Date</td>";
+                                                    echo "<td width='10%'>Name on Cheque</td>";
+                                                    echo "<td width='10%'>Total amount on Cheque</td>";
+                                                    echo "<td width='5%'>Bank</td>";
+                                                    echo "<td width='5%'>Amount</td>";
+                                                    echo "<td width='10%'>Deposit Slip No.</td>";
+                                                    echo "<td width='10%'>Deposit In</td>";
+                                                    echo "<td width='10%'>Deposit Acc. Title</td>";
+                                                    echo "<td width='5%'>Deposit Date</td>";
+                                                    echo "<td width='10%'>Remarks</td>";
+                                                    echo "<td width='5%' align='center'>Clearance</td>";
+                                                    echo "</tr>";
                                                     $id = $rs["id"];
                                                     //$project_id = $rs["project_id"];
                                                     $account_id = $rs["account_id"];
@@ -572,7 +606,8 @@
                                                     $deposit_date        = $rs["deposit_date"];
                                                     $deposit_remarks     = $rs["deposit_remarks"];
                                                     $deposit_in          = $rs["deposit_in"];
-                                                    $deposit_acc_title   = $rs["deposit_acc_title"];
+                                                    $deposit_acc_title   = trim($rs["deposit_acc_title"]);
+                                                    $clearance_log       = $rs["clearance_log"];
                                                     echo "<tr>";
                                                     echo "<td>" . date("d-m-Y", strtotime($invoice_date)) . "</td>";
                                                     echo "<td>";
@@ -588,34 +623,83 @@
                                                     echo "<td>" . (($cheque_total_amount != '0.00') ? $cheque_total_amount : "") . "</td>";
                                                     echo "<td>" . getBankShortName($bank_id) . "</td>";
                                                     echo "<td>" . number_format($amount, 2, ".", ",") . "</td>";
-                                                    echo "<td>" . $deposit_slip_num . "</td>";
-                                                    echo "<td>" . getDepositAccountTitle($deposit_in) . "</td>";
-                                                    echo "<td>" . $deposit_acc_title . "</td>";
-                                                    echo "<td>" . (($deposit_date == '0000-00-00') ? "" : date('d-m-Y', strtotime($deposit_date))) . "</td>";
-                                                    echo "<td>" . $deposit_remarks . "</td>";
+                                                    if($clearance_status == "BOUNCED") {
+                                                        echo "<td colspan='5'>&nbsp;</td>";
+                                                    } else {
+                                                        echo "<td>" . $deposit_slip_num . "</td>";
+                                                        echo "<td>" . getDepositAccountTitle($deposit_in) . "</td>";
+                                                        echo "<td>" . $deposit_acc_title . "</td>";
+                                                        echo "<td>" . (($deposit_date == '0000-00-00') ? "" : date('d-m-Y', strtotime($deposit_date))) . "</td>";
+                                                        echo "<td>" . $deposit_remarks . "</td>";
+                                                    }
                                                     echo "<td align='center'>";
-                                                    echo $clearance_status;
-                                                    if ($clearance_status !== "PENDING") {
+                                                    if ($clearance_status == "CLEARED") {
+                                                        echo $clearance_status;
                                                         echo "<br /><span class='notes'>";
                                                         echo date("d-m-Y h:ia", strtotime($cleared_on));
                                                         echo "<br />" . getUserFullName($cleared_by);
                                                         echo "</span>";
                                                     } else {
                                                         if (checkPermission($userInfo["id"], MODIFY)) {
-                                                            echo "<br/>";
-                                                            if ($deposit_slip_num == '') {
-                                                                echo "<input type='button' value='Deposit Form' class='ui-button ui-widget ui-state-default ui-corner-all ui-state-hover' onclick=\"javascript: bankFormSubmit('$id', '$cheque_number');\">";
+                                                            if ($deposit_slip_num == '' || $clearance_status == "BOUNCED") {
+                                                                echo "<input type='button' value='Deposit Form' class='ui-button ui-widget ui-state-default ui-corner-all ui-state-hover' style='margin-top: 5px;' onclick=\"javascript: bankFormSubmit('$id', '$cheque_number');\">";
                                                             } else {
-                                                                echo "<select id='clearance_status' name='clearance_status' onChange=\"javascript: updateClearance(this.value, '$id', '$cheque_number');\">";
-                                                                echo "<option value=''>-- Update --</option>";
-                                                                echo "<option value='CLEARED'>CLEARED</option>";
-                                                                echo "<option value='BOUNCED'>BOUNCED</option>";
-                                                                echo "</select>";
+                                                                echo $clearance_status;
+                                                                echo '<form action="index.php?ss='.$ss.'&mod='.$mod.'&voucher_number='.$voucher_number.'" method="POST" class="frmClearance">';
+                                                                    echo '<input type="hidden" name="cmd" value="CLEARANCE"/>';
+                                                                    echo '<input type="hidden" name="tid" value="'.$id.'"/>';
+                                                                    echo '<input type="hidden" name="cnum" value="'.$cheque_number.'"/>';
+                                                                    echo "<select name='clearance_status' onChange=\"javascript: updateClearance(this);\">";
+                                                                    echo "<option value=''>-- Update --</option>";
+                                                                    echo "<option value='CLEARED'>CLEARED</option>";
+                                                                    echo "<option value='BOUNCED'>BOUNCED</option>";
+                                                                    echo "</select>";
+                                                                echo '</form>';
+                                                                if($clearance_status == "PENDING") {
+                                                                    echo "<input type='button' value='Edit Deposit Form' class='ui-button ui-widget ui-state-default ui-corner-all ui-state-hover' style='margin-top: 5px;' onclick=\"javascript: bankFormSubmit('$id', '$cheque_number', '$deposit_slip_num', '$deposit_date', '$deposit_in', '$deposit_acc_title', '$deposit_remarks');\">";
+                                                                }
                                                             }
                                                         }
                                                     }
                                                     echo "</td>";
                                                     echo "</tr>";
+                                                    //
+                                                    if($clearance_log != '') {
+                                                        $clearance_log = unserialize($clearance_log);
+                                                        echo "<tr>";
+                                                        echo "<td colspan='7'>&nbsp;</td>";
+                                                        echo "<td colspan='7'>";
+                                                        echo "<table border='0' width='100%' cellpadding='5' cellspacing='0' align='center' id='reclist'>";
+                                                        echo "<tr id='listhead'>";
+                                                        echo "<td colspan='7' align='center'>Clearance Log</td>";
+                                                        echo "</tr>";
+                                                        echo "<tr>";
+                                                        echo "<td width='10%'>Deposit Slip No.</td>";
+                                                        echo "<td width='10%'>Deposit In</td>";
+                                                        echo "<td width='10%'>Deposit Acc. Title</td>";
+                                                        echo "<td width='5%'>Deposit Date</td>";
+                                                        echo "<td width='10%'>Remarks</td>";
+                                                        echo "<td width='5%' align='center'>Clearance</td>";
+                                                        echo "</tr>";
+                                                        foreach ($clearance_log as $log) {
+                                                            echo "<td width='10%'>".$log['deposit_slip_num']."</td>";
+                                                            echo "<td width='10%'>".$log['account_number']."</td>";
+                                                            echo "<td width='10%'>".$log['deposit_acc_title']."</td>";
+                                                            echo "<td width='5%'>".$log['deposit_date']."</td>";
+                                                            echo "<td width='10%'>".$log['deposit_remarks']."</td>";
+                                                            echo "<td width='5%' align='center'>";
+                                                                echo $log['clearance_status'];
+                                                                echo "<br /><span class='notes'>";
+                                                                echo date("d-m-Y h:ia", strtotime($log['cleared_on']));
+                                                                echo "<br />" . $log['cleared_by'];
+                                                                echo "</span>";
+                                                            echo "</td>";
+                                                            echo "</tr>";
+                                                        }
+                                                        echo "</table>";
+                                                        echo "</td>";
+                                                        echo "</tr>";
+                                                    }
                                                 }
                                             } else {
                                                 echo "<tr>";
@@ -659,7 +743,7 @@
                                                 $result = mysql_query($sql, $conn) or die(mysql_error());
 
                                                 while ($rs = mysql_fetch_array($result)) {
-                                                    echo "<option value=\"" . $rs["id"] . "|" . $rs["account_title"] . "\">" . $rs["account_number"] . "</option>";
+                                                    echo "<option value=\"" . $rs["id"] . "|" . trim($rs["account_title"]) . "\">" . $rs["account_number"] . "</option>";
                                                 }
                                             ?>
                                         </select>
