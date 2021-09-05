@@ -686,7 +686,7 @@
                                                             echo "<td width='10%'>".$log['account_number']."</td>";
                                                             echo "<td width='10%'>".$log['deposit_acc_title']."</td>";
                                                             echo "<td width='5%'>".$log['deposit_date']."</td>";
-                                                            echo "<td width='10%'>".$log['deposit_remarks']."</td>";
+                                                            echo "<td width='10%'>".nl2br($log['deposit_remarks'])."</td>";
                                                             echo "<td width='5%' align='center'>";
                                                                 echo $log['clearance_status'];
                                                                 echo "<br /><span class='notes'>";
