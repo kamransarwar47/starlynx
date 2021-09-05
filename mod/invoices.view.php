@@ -254,7 +254,7 @@
             $('#deposit_slip_num').val(dsn);
             $('#cheque_date').val(ddte);
             $('#deposit_in').val(din + '|' + dact).change();
-            $('#deposit_remarks').val(drem);
+            $('#deposit_remarks').val(drem.replace(/<br\s*\/?>/g, '\n'));
 
             $("#dlgBankDeposit").dialog("open");
         }
@@ -604,7 +604,7 @@
                                                     $cleared_by          = $rs["cleared_by"];
                                                     $deposit_slip_num    = $rs["deposit_slip_num"];
                                                     $deposit_date        = $rs["deposit_date"];
-                                                    $deposit_remarks     = $rs["deposit_remarks"];
+                                                    $deposit_remarks     = preg_replace("/\r\n|\r|\n/", '<br/>', $rs["deposit_remarks"]);
                                                     $deposit_in          = $rs["deposit_in"];
                                                     $deposit_acc_title   = trim($rs["deposit_acc_title"]);
                                                     $clearance_log       = $rs["clearance_log"];
