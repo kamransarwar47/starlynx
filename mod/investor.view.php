@@ -100,6 +100,38 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
+                                                    <!-- Project Plots -->
+                                                    <?php
+                                                        $paidTotal = 0;
+                                                        $rcvdTotal = 0;
+
+                                                    // Select project plots
+                                                    $sql_plots = "select
+                                                        DISTINCT(d.account_id)
+                                                    from
+                                                        transactions t, transactions_details d
+                                                    where
+                                                        t.id = d.transaction_id
+                                                        and t.account_id = '$investor_account_id'
+                                                        and t.project_id = '$project_id'";
+                                                    $result_plots = mysql_query($sql_plots, $conn) or die(mysql_error());
+                                                    $numrows_plots = mysql_num_rows($result_plots);
+
+                                                    if ($numrows_plots > 0) {
+                                                        while ($rs_plots = mysql_fetch_array($result_plots)) {
+                                                        $plot_account_id = $rs_plots["account_id"];
+                                                    ?>
+                                                    <table border="0" width="100%" cellpadding="5" cellspacing="0" align="center" style="margin-bottom: 10px;">
+                                                        <tr>
+                                                            <td width="50%" valign="top">
+                                                                <p style="font-size: 18px; font-weight: bold;">
+                                                                    <strong>Plot</strong><br>
+                                                                    <?= getAccountTitle($plot_account_id) ?>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2">
                                                     <!-- Project Investor Payment Start -->
                                                     <table borer="0" width="100%" cellpadding="5" cellspacing="0"
                                                            align="center" id="reclist">
@@ -111,9 +143,6 @@
                                                         </tr>
 
                                                         <?
-                                                            $paidTotal = 0;
-                                                            $rcvdTotal = 0;
-
                                                             // Select transactions
                                                             $sql = "select
                                                         t.account_id, t.voucher_id, t.transaction_type, t.invoice_date, d.notes,
@@ -124,6 +153,7 @@
                                                         t.id = d.transaction_id
                                                         and t.account_id = '$investor_account_id'
                                                         and t.project_id = '$project_id'
+                                                        and d.account_id = '$plot_account_id'
                                                     order by
                                                         t.invoice_date asc
                                                     ";
@@ -170,7 +200,25 @@
                                                                     echo "</tr>";
                                                                 }
                                                             }
-
+                                                        ?>
+                                                    </table>
+                                                    <!-- Plot Commission End -->
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <table borer="0" width="100%" cellpadding="5" cellspacing="0"
+                                                           align="center" id="reclist" style="border-top: 2px dashed #aaa; padding-top: 10px;">
+                                                        <tr id="listhead">
+                                                            <td width="15%"><strong>&nbsp;</strong></td>
+                                                            <td width="75%"><strong>&nbsp;</strong></td>
+                                                            <td width="10%" align="right"><strong>RCVD.</strong></td>
+                                                            <td width="10%" align="right"><strong>PAID</strong></td>
+                                                        </tr>
+                                                        <?php
                                                             echo "<tr>";
                                                             echo "<td>&nbsp;</td>";
                                                             echo "<td style='font-size: 16px; font-weight: bold;'>Total</td>";
@@ -185,10 +233,9 @@
                                                             echo "</tr>";
                                                         ?>
                                                     </table>
-                                                    <!-- Plot Commission End -->
-                                                </td>
-                                            </tr>
-                                        </table>
+                                            </td>
+                                        </tr>
+                                    </table>
                                     </td>
                                 </tr>
                             </table>
