@@ -428,6 +428,7 @@
             '<option value="INSTALMENT">INSTALMENT</option>' +
             '<option value="COMMISSION">COMMISSION</option>' +
             '<option value="PAYMENT RETURN">PAYMENT RETURN</option>' +
+            '<option value="PAYMENT TRANSFER">PAYMENT TRANSFER</option>' +
             '<option value="OTHER">OTHER</option>' +
             "</select>" +
             "<input type='text' style='display:none; width: 90%;' name='detail_notes[" + row + "][]' id='detail_notes_input' maxlength='255' value=''/>" +
@@ -641,6 +642,7 @@
                                                                         'INSTALMENT' => 'INSTALMENT',
                                                                         'COMMISSION' => 'COMMISSION',
                                                                         'PAYMENT RETURN' => 'PAYMENT RETURN',
+                                                                        'PAYMENT TRANSFER' => 'PAYMENT TRANSFER',
                                                                         'OTHER' => 'OTHER',
                                                                     );
 
@@ -751,6 +753,7 @@
                                                                     'INSTALMENT' => 'INSTALMENT',
                                                                     'COMMISSION' => 'COMMISSION',
                                                                     'PAYMENT RETURN' => 'PAYMENT RETURN',
+                                                                    'PAYMENT TRANSFER' => 'PAYMENT TRANSFER',
                                                                     'OTHER' => 'OTHER',
                                                                 );
 
