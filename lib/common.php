@@ -1235,9 +1235,10 @@
         $total_head_office_expenses_this_month = 0;
         $total_head_office_expenses_till_date  = 0;
 
-        if ($expense_percentage > 0) {
+        if ($expense_percentage != '') {
 
             $project_id = getProjectIdByName("Head Office");
+            $expense_percentage = unserialize($expense_percentage);
 
             if ($incPending != "Y") {
                 $pendingAuthHand = "AND (t.transaction_type='PAYMENT' AND t.auth_status='AUTH')";
@@ -1253,6 +1254,7 @@
 
             // get total payments against project this month
             $sql = "SELECT 
+                DATE_FORMAT(t.invoice_date, '%Y-%m') AS invoice_date,
                 SUM(CASE WHEN (t.invoice_date BETWEEN \"" . $first_day_this_month . "\" AND \"" . $last_day_this_month . "\") THEN d.amount ELSE 0 END) AS total_head_office_expenses_this_month,
                 SUM(CASE WHEN t.invoice_date <= \"" . $last_day_last_month . "\" THEN d.amount ELSE 0 END) AS total_head_office_expenses_till_date
                 FROM projects p, transactions t, transactions_details d
@@ -1260,18 +1262,16 @@
                 AND t.project_id = p.id 
                 AND t.id = d.transaction_id 
                 $pendingAuthHand 
-                $pendingClearance";
+                $pendingClearance
+                GROUP BY YEAR(t.invoice_date), MONTH(t.invoice_date);";
             $result = mysql_query($sql, $conn) or die(mysql_error());
             $numrows = mysql_num_rows($result);
             if ($numrows > 0) {
                 while ($rs = mysql_fetch_array($result)) {
-                    $total_head_office_expenses_this_month = $rs['total_head_office_expenses_this_month'];
-                    $total_head_office_expenses_till_date  = $rs['total_head_office_expenses_till_date'];
+                    $total_head_office_expenses_this_month += ($rs['total_head_office_expenses_this_month'] / 100) * (!empty($expense_percentage[$rs['invoice_date']]) ? $expense_percentage[$rs['invoice_date']]['percentage'] : 0);
+                    $total_head_office_expenses_till_date  += ($rs['total_head_office_expenses_till_date'] / 100) * (!empty($expense_percentage[$rs['invoice_date']]) ? $expense_percentage[$rs['invoice_date']]['percentage'] : 0);
                 }
             }
-
-            $total_head_office_expenses_this_month = ($total_head_office_expenses_this_month / 100) * $expense_percentage;
-            $total_head_office_expenses_till_date  = ($total_head_office_expenses_till_date / 100) * $expense_percentage;
         }
 
         return ['total_head_office_expenses_this_month' => $total_head_office_expenses_this_month, 'total_head_office_expenses_till_date' => $total_head_office_expenses_till_date];
