@@ -432,12 +432,3 @@
         <td class="bottom_right"></td>
     </tr>
 </table>
-<script>
-    $(document).ready(function () {
-        $('#new_sub_accounts').click(function() {
-            if ($(this).is(':checked')) {
-                $('#new_account').prop("checked", true);
-            }
-        });
-    });
-</script>
